@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<title>Film Directory</title>
+</head>
+
+	
+<body>
+
+<div class="container">
+<p>Clicca sui nomi per ordinare le tabelle in ordine crescente e decrescente</p>
+	<h3>Lista Film</h3>
+	<hr>
+	
+	<!-- Add a button -->
+	<a th:href="@{/films/showFormForAdd}"
+		class="btn btn-primary btn-sm mb-3">
+		Aggiungi Film
+	</a>
+	<div align="right">
+    <form action="#" th:action="@{/films/search}"
+                         th:object="${film}" method="GET">
+    <input type="search" id="titolo" name="titolo" 
+  placeholder="Cerca per titolo">
+	<button class="btn btn-info btn-sm ml-3 mr-1">Cerca</button>
+    </form>
+    <br>
+    </div>
+	<table class="table table-bordered table-striped" id="myTable">
+		<thead class="thead-dark">
+			<tr>
+				<th onclick="sortTable(0)">Titolo</th>
+				<th onclick="sortTable(1)">Anno</th>
+				<th onclick="sortTable(2)">Regista</th>
+				<th onclick="sortTable(3)">Tipo</th>
+				<th onclick="sortTable(4)">Incasso</th>
+				<th>Azioni</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr th:each="tempFilm : ${films}">
+			
+				<td th:text="${tempFilm.titolo}" />	
+				<td th:text="${tempFilm.anno}" />	
+				<td th:text="${tempFilm.regista}" />	
+				<td th:text="${tempFilm.tipo}" />	
+				<td th:text="${tempFilm.incasso}" />	
+				
+				<td>
+				</td>
+				
+				
+			</tr>
+		</tbody>		
+	</table>
+	<hr>
+		<a th:href="@{/films/list}">Annulla ricerca</a>
+		<br><br>
+		<a th:href="@{/}">Torna alla pagina principale</a>
+		<br><br>
+</div>
+	<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;      
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+</body>
+</html>
+
+
+
